@@ -35,6 +35,7 @@ game_over_rec = game_over_surface.get_rect(center=(400, 50))
 player = Player(floor_top)
 snail = Snail(floor_top)
 
+start_time = int(pygame.time.get_ticks() / 1000)
 snail_spawn_time = 0
 snails = [Snail(floor_top)]
 
@@ -49,17 +50,23 @@ while True:
     if game_active:
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, (0, floor_top))
-        # display_score()
+        display_score()
 
         # Snail
         for snail in snails:
             snail.snail_move()
             snail.draw(screen)
             
+        # More snail logic     
         current_time = int(pygame.time.get_ticks() / 1000) 
-        if current_time - snail_spawn_time >= 20:
+        if current_time - snail_spawn_time >= 63:
             snails.append(Snail(floor_top))
             snail_spawn_time = current_time
+
+        for snail in snails:
+            snail.move_speed += 1
+            snail.snail_move() 
+            print(snail.snail_move)
 
         # Player
         player.player_grav()
