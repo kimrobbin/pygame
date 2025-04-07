@@ -6,10 +6,12 @@ Innen drift skal jeg vise:
 
 - Vise nettverksoppsettet mitt 
 - Vise hvordan jeg har konfigurert brannmur
+- Hvordan databasen min fungerer 
 
 
 
 Script 
 
 - Lage nye keybinds som gjør ting
-- 
+- Lage en ny spiller 
+
