@@ -19,6 +19,7 @@ pygame.display.set_caption("Learn Game")
 clock = pygame.time.Clock()
 test_font = pygame.font.Font("font/Pixeltype.ttf", 50)
 game_active = True
+start_time = int(pygame.time.get_ticks() / 1000)  # Initialize start_time
 
 # Background
 sky_surface = pygame.image.load("graphics/sky.png").convert()
@@ -30,12 +31,9 @@ game_over_rec = game_over_surface.get_rect(center=(400, 50))
 
 # Initialize classes
 player = Player(floor_top)
-snail = Snail(floor_top)
+snail_spawn_time = 0 
+snails = [Snail(floor_top)]
 
-
-
-
-    
 while True: 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -49,25 +47,25 @@ while True:
         screen.blit(ground_surface, (0, floor_top))
         display_score()
 
-    # Snail
-    # for snail in snails:
-    #     snail.snail_move()
-    #     snail.draw(screen)
+        # Snail
+        for snail in snails:
+            snail.snail_move()
+            snail.draw(screen)
+            
+        current_time = int(pygame.time.get_ticks() / 1000) 
+        if current_time - snail_spawn_time >= 20:
+            snails.append(Snail(floor_top))
+            snail_spawn_time = current_time
 
-    # current_time = int(pygame.time.get_ticks() / 1000)
-    # if current_time - snail_spawn_time >= 63:
-    #     snails.append(Snail(floor_top))
-    #     snail_spawn_time = current_time
-
-    # Player
-    player.player_grav()
-    player.input(keys)
-    player.draw(screen)
-    player.reset(keys)
+        # Player
+        player.player_grav()
+        player.input(keys)
+        player.draw(screen)
+        player.reset(keys)
 
         # End game
-    if any(player.rect.colliderect(snail) for snail in snails):
-        game_active = False
+        if any(player.rect.colliderect(snail.rect) for snail in snails):  
+            game_active = False
 
     else:
         screen.fill("black")

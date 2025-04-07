@@ -34,9 +34,6 @@ class Player:
             self.rect = self.rect
             
             
-        
-            
-            
     def draw(self, screen):
         screen.blit(self.surface, self.rect)    
         
