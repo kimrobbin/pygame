@@ -9,9 +9,14 @@ def display_score():
     score_rec = score_surface.get_rect(center=(400, 50))
     screen.blit(score_surface, score_rec)
 
+# Game variables
 floor_top = 300
 snail_respawn = 800
 screen_res = 800, 400
+
+more_snails = 20
+
+
 
 pygame.init()
 screen = pygame.display.set_mode((screen_res))
@@ -46,25 +51,31 @@ while True:
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, (0, floor_top))
         display_score()
+        
+    
 
         # Snail
         for snail in snails:
             snail.snail_move()
             snail.draw(screen)
             
-        current_time = int(pygame.time.get_ticks() / 1000) 
-        if current_time - snail_spawn_time >= 20:
+        current_time = int(pygame.time.get_ticks() / 1000 ) 
+        if current_time - snail_spawn_time >= more_snails:
             snails.append(Snail(floor_top))
             snail_spawn_time = current_time
+            
+        # if player.rect.bottom == snail.rect.top:
+            
 
         # Player
         player.player_grav()
         player.input(keys)
         player.draw(screen)
         player.reset(keys)
+        player.border()
 
         # End game
-        if any(player.rect.colliderect(snail.rect) for snail in snails):  
+        if player.rect.colliderect(snail.rect.left):  
             game_active = False
 
     else:

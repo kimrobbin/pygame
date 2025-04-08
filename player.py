@@ -15,6 +15,7 @@ class Player:
         self.rect.y += self.gravity
         if self.rect.bottom >= self.floor_top:
             self.rect.bottom = self.floor_top
+    
             
     def input(self, keys):
         if keys[pygame.K_SPACE] or keys[pygame.K_w]:
@@ -24,6 +25,16 @@ class Player:
             self.rect.x += self.move_speed
         if keys[pygame.K_a]:
             self.rect.x -= self.move_speed
+     
+     
+    # Makes a boder so player cant leave the screen        
+    def border (self):
+        if self.rect.left <= 0:
+            self.rect.left = 0
+        if self.rect.right >= 800:
+            self.rect.right = 800
+            
+            
             
     def reset(self, keys):
         if keys[pygame.K_ESCAPE]:
