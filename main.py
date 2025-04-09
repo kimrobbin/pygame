@@ -4,8 +4,7 @@ from player import Player  # Import the Player class
 from snail import Snail  # Import the Snail class
 
 def display_score():
-    current_time = int(pygame.time.get_ticks() / 1000) - start_time
-    score_surface = test_font.render(f"Score: {current_time}", False, "black").convert()
+    score_surface = test_font.render(f"Score: {score_hit}", False, "black").convert()
     score_rec = score_surface.get_rect(center=(400, 50))
     screen.blit(score_surface, score_rec)
 
@@ -13,8 +12,10 @@ def display_score():
 floor_top = 300
 snail_respawn = 800
 screen_res = 800, 400
+score_hit = 0
 
-more_snails = 20
+more_snails = 5
+
 
 
 
@@ -46,6 +47,7 @@ while True:
             exit()
                 
     keys = pygame.key.get_pressed()
+    
 
     if game_active:
         screen.blit(sky_surface, (0, 0))
@@ -64,9 +66,25 @@ while True:
             snails.append(Snail(floor_top))
             snail_spawn_time = current_time
             
-        # if player.rect.bottom == snail.rect.top:
             
 
+        for snail in snails:
+            if player.rect.colliderect(snail.rect):
+                
+                if player.rect.bottom <= snail.rect.top + 20:
+                    player.rect.bottom = snail.rect.top
+                    player.gravity -= 30
+                    snails.remove(snail)
+                    score_hit += 1
+                else:
+                    # Ends game 
+                    if player.rect.right >= snail.rect.left and player.rect.left < snail.rect.left: # check if the player collides with the snail from the right side
+                        game_active = False
+                    if player.rect.left <= snail.rect.right and player.rect.right > snail.rect.right:
+                        game_active = False
+
+        
+        
         # Player
         player.player_grav()
         player.input(keys)
@@ -74,9 +92,6 @@ while True:
         player.reset(keys)
         player.border()
 
-        # End game
-        if player.rect.colliderect(snail.rect.left):  
-            game_active = False
 
     else:
         screen.fill("black")
