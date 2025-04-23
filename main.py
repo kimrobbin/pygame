@@ -1,4 +1,5 @@
 import pygame
+import random
 from sys import exit
 from player import Player  # Import the Player class
 from snail import Snail  # Import the Snail class
@@ -8,13 +9,19 @@ def display_score():
     score_rec = score_surface.get_rect(center=(400, 50))
     screen.blit(score_surface, score_rec)
 
+def display_score_death():
+    score_surface = test_font.render(f"Score: {score_hit}", False, "white").convert()
+    score_rec = score_surface.get_rect(center=(400, 100))
+    screen.blit(score_surface, score_rec)
+
+
 # Game variables
 floor_top = 300
 snail_respawn = 800
 screen_res = 800, 400
 score_hit = 0
 
-more_snails = 5
+snail_spawn_speed = 3
 
 
 
@@ -37,8 +44,11 @@ game_over_rec = game_over_surface.get_rect(center=(400, 50))
 
 # Initialize classes
 player = Player(floor_top)
-snail_spawn_time = 0 
+snail_spawn_time = 0
 snails = [Snail(floor_top)]
+
+def new_func(player, snail):
+    player.rect.bottom = snail.rect.top
 
 while True: 
     for event in pygame.event.get():
@@ -62,17 +72,19 @@ while True:
             snail.draw(screen)
             
         current_time = int(pygame.time.get_ticks() / 1000 ) 
-        if current_time - snail_spawn_time >= more_snails:
+        if current_time - snail_spawn_time >= snail_spawn_speed:
             snails.append(Snail(floor_top))
             snail_spawn_time = current_time
             
-            
+        if score_hit >= 5:
+            snail_spawn_speed = random.uniform(1, 20)
 
+        print(snail_spawn_speed)
+        
         for snail in snails:
             if player.rect.colliderect(snail.rect):
                 
                 if player.rect.bottom <= snail.rect.top + 20:
-                    player.rect.bottom = snail.rect.top
                     player.gravity -= 30
                     snails.remove(snail)
                     score_hit += 1
@@ -80,7 +92,7 @@ while True:
                     # Ends game 
                     if player.rect.right >= snail.rect.left and player.rect.left < snail.rect.left: # check if the player collides with the snail from the right side
                         game_active = False
-                    if player.rect.left <= snail.rect.right and player.rect.right > snail.rect.right:
+                    if player.rect.left <= snail.rect.right and player.rect.right > snail.rect.right: 
                         game_active = False
 
         
@@ -89,20 +101,23 @@ while True:
         player.player_grav()
         player.input(keys)
         player.draw(screen)
-        player.reset(keys)
         player.border()
 
 
     else:
         screen.fill("black")
         screen.blit(game_over_surface, game_over_rec)
+        display_score_death()
 
     if keys[pygame.K_r]:
         snails = [Snail(floor_top)]
         player = Player(floor_top)
         start_time = int(pygame.time.get_ticks() / 1000)
         game_active = True
-
+        score_hit = 0
+        snail_spawn_time = 3
+        snail_spawn_speed = 3
+    
     if keys[pygame.K_ESCAPE]:
         pygame.quit()
         exit()
