@@ -3,6 +3,33 @@ import random
 from sys import exit
 from player import Player  # Import the Player class
 from snail import Snail  # Import the Snail class
+from db import *
+
+# Creates a database if it doesnt exist
+
+mycursor.execute("CREATE DATABASE IF NOT EXISTS Pygame")
+
+
+# Creates Tabels.
+mycursor.execute(""" CREATE TABLE IF NOT EXISTS USERS( 
+                 score int(200) NOT NULL,
+                 time_survived int(200) NOT NULL,
+                 user varchar(20) NOT NULL )
+                 """)
+
+# for i in mycursor:
+#     print(i)
+
+# adding data
+
+sql_statement = "INSERT INTO USERS (score, time_survived, user) VALUES (%s, %s, %s)"
+
+dbconn.commit()
+
+    
+
+
+
 
 def display_score():
     score_surface = test_font.render(f"Score: {score_hit}", False, "black").convert()
@@ -60,6 +87,7 @@ while True:
     
 
     if game_active:
+        data_sent = False
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, (0, floor_top))
         display_score()
@@ -79,7 +107,7 @@ while True:
         if score_hit >= 5:
             snail_spawn_speed = random.uniform(1, 20)
 
-        print(snail_spawn_speed)
+        # print(snail_spawn_speed)
         
         for snail in snails:
             if player.rect.colliderect(snail.rect):
@@ -108,6 +136,16 @@ while True:
         screen.fill("black")
         screen.blit(game_over_surface, game_over_rec)
         display_score_death()
+        
+        # Sending data to database 
+        if not data_sent:
+            time_survived = int(pygame.time.get_ticks() / 1000) - start_time
+            
+            added_date = (score_hit, time_survived, "test")
+            mycursor.execute(sql_statement, added_date)
+            
+            dbconn.commit()
+            data_sent = True
 
     if keys[pygame.K_r]:
         snails = [Snail(floor_top)]
@@ -117,6 +155,7 @@ while True:
         score_hit = 0
         snail_spawn_time = 3
         snail_spawn_speed = 3
+        data_sent = False
     
     if keys[pygame.K_ESCAPE]:
         pygame.quit()
