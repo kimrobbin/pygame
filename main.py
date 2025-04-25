@@ -76,6 +76,7 @@ snails = [Snail(floor_top)]
 
 def new_func(player, snail):
     player.rect.bottom = snail.rect.top
+    
 
 while True: 
     for event in pygame.event.get():
