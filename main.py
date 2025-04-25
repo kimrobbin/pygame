@@ -26,7 +26,52 @@ sql_statement = "INSERT INTO USERS (score, time_survived, user) VALUES (%s, %s, 
 
 dbconn.commit()
 
-    
+
+    # Add a variable to store the user's name
+user_name = ""
+
+def get_user_name():
+    """Function to capture user name input."""
+    global user_name
+    input_active = True
+    name_font = pygame.font.Font("font/Pixeltype.ttf", 50)
+    input_box = pygame.Rect(300, 200, 200, 50)
+    color_inactive = pygame.Color('gray')
+    color_active = pygame.Color('white')
+    color = color_inactive
+    active = False
+    text = ""
+
+    while input_active:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Toggle the active state if the user clicks the input box
+                if input_box.collidepoint(event.pos):
+                    active = not active
+                else:
+                    active = False
+                color = color_active if active else color_inactive
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        user_name = text  # Save the entered name
+                        input_active = False  # Exit the input loop
+                    elif event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]  # Remove the last character
+                    else:
+                        text += event.unicode  # Add the typed character
+
+        # Render the input box and text
+        screen.fill("black")
+        txt_surface = name_font.render(text, True, color)
+        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+        pygame.draw.rect(screen, color, input_box, 2)
+        pygame.display.flip()
+        clock.tick(30)
+
 
 
 
