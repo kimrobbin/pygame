@@ -3,19 +3,19 @@ import random
 from sys import exit
 from player import Player  # Import the Player class
 from snail import Snail  # Import the Snail class
-from db import *
+# from db import *
 import asyncio
 # Creates a database if it doesnt exist
 
-mycursor.execute("CREATE DATABASE IF NOT EXISTS Pygame")
+# mycursor.execute("CREATE DATABASE IF NOT EXISTS Pygame")
 
 
-# Creates Tabels.
-mycursor.execute(""" CREATE TABLE IF NOT EXISTS USERS( 
-                 score int(200) NOT NULL,
-                 time_survived int(200) NOT NULL,
-                 user varchar(20) NOT NULL )
-                 """)
+# # Creates Tabels.
+# mycursor.execute(""" CREATE TABLE IF NOT EXISTS USERS( 
+#                  score int(200) NOT NULL,
+#                  time_survived int(200) NOT NULL,
+#                  user varchar(20) NOT NULL )
+#                  """)
 
 # for i in mycursor:
 #     print(i)
@@ -24,7 +24,7 @@ mycursor.execute(""" CREATE TABLE IF NOT EXISTS USERS(
 
 sql_statement = "INSERT INTO USERS (score, time_survived, user) VALUES (%s, %s, %s)"
 
-dbconn.commit()
+# dbconn.commit()
 
 # Add a variable to store the user's name
 user_name = ""
@@ -183,14 +183,14 @@ async def game():
             display_score_death()
             
             # Sending data to database 
-            if not data_sent:
-                time_survived = int(pygame.time.get_ticks() / 1000) - start_time
+            # if not data_sent:
+            #     time_survived = int(pygame.time.get_ticks() / 1000) - start_time
                 
-                added_date = (score_hit, time_survived, user_name)  # Use the captured name
-                mycursor.execute(sql_statement, added_date)
+            #     added_date = (score_hit, time_survived, user_name)  # Use the captured name
+            #     mycursor.execute(sql_statement, added_date)
                 
-                dbconn.commit()
-                data_sent = True
+            #     dbconn.commit()
+            #     data_sent = True
 
         if keys[pygame.K_r]:
             snails = [Snail(floor_top)]

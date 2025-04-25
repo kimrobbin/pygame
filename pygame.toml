@@ -1,0 +1,8 @@
+[project]
+name = "main"
+
+[files]
+"graphics/ground.png" = "graphics/ground.png"
+"graphics/Sky.png" = "graphics/Sky.png"
+"graphics/player_walk_1.png" = "graphics/player_walk_1.png"
+"graphics/snail1.png" = "graphics/snail1.png"
