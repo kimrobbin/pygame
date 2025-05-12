@@ -7,71 +7,30 @@ from db import *
 
 # Creates a database if it doesnt exist
 
-# mycursor.execute("CREATE DATABASE IF NOT EXISTS Pygame")
+mycursor.execute("CREATE DATABASE IF NOT EXISTS Pygame")
+
+mycursor.execute("USE Pygame")
+
+# Creates Tabels.
+mycursor.execute(""" CREATE TABLE IF NOT EXISTS USERS( 
+                 score int(200) NOT NULL,
+                 time_survived int(200) NOT NULL,
+                 user varchar(20) NOT NULL )
+                 """)
 
 
-# # Creates Tabels.
-# mycursor.execute(""" CREATE TABLE IF NOT EXISTS USERS( 
-#                  score int(200) NOT NULL,
-#                  time_survived int(200) NOT NULL,
-#                  user varchar(20) NOT NULL )
-#                  """)
 
-# for i in mycursor:
-#     print(i)
 
-# adding data
-
-sql_statement = "INSERT INTO USERS (score, time_survived, user) VALUES (%s, %s, %s)"
 
 dbconn.commit()
 
 
-    # Add a variable to store the user's name
-user_name = ""
-
-def get_user_name():
-    """Function to capture user name input."""
-    global user_name
-    input_active = True
-    name_font = pygame.font.Font("font/Pixeltype.ttf", 50)
-    input_box = pygame.Rect(300, 200, 200, 50)
-    color_inactive = pygame.Color('gray')
-    color_active = pygame.Color('white')
-    color = color_inactive
-    active = False
-    text = ""
-
-    while input_active:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # Toggle the active state if the user clicks the input box
-                if input_box.collidepoint(event.pos):
-                    active = not active
-                else:
-                    active = False
-                color = color_active if active else color_inactive
-            if event.type == pygame.KEYDOWN:
-                if active:
-                    if event.key == pygame.K_RETURN:
-                        user_name = text  # Save the entered name
-                        input_active = False  # Exit the input loop
-                    elif event.key == pygame.K_BACKSPACE:
-                        text = text[:-1]  # Remove the last character
-                    else:
-                        text += event.unicode  # Add the typed character
-
-        # Render the input box and text
-        screen.fill("black")
-        txt_surface = name_font.render(text, True, color)
-        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
-        pygame.draw.rect(screen, color, input_box, 2)
-        pygame.display.flip()
-        clock.tick(30)
-
+# Makes the user have to enter ther name
+username = input("Enter your name: ")
+if username == "":
+    game_active = False
+else:
+    game_active = True    
 
 
 
@@ -121,7 +80,6 @@ snails = [Snail(floor_top)]
 
 def new_func(player, snail):
     player.rect.bottom = snail.rect.top
-    
 
 while True: 
     for event in pygame.event.get():
@@ -145,11 +103,13 @@ while True:
             snail.snail_move()
             snail.draw(screen)
             
+        
         current_time = int(pygame.time.get_ticks() / 1000 ) 
         if current_time - snail_spawn_time >= snail_spawn_speed:
             snails.append(Snail(floor_top))
             snail_spawn_time = current_time
             
+        # If the player has killed 5 snails, increase the spawn speed of the snails
         if score_hit >= 5:
             snail_spawn_speed = random.uniform(1, 20)
 
@@ -166,7 +126,7 @@ while True:
                     # Ends game 
                     if player.rect.right >= snail.rect.left and player.rect.left < snail.rect.left: # check if the player collides with the snail from the right side
                         game_active = False
-                    if player.rect.left <= snail.rect.right and player.rect.right > snail.rect.right: 
+                    if player.rect.left <= snail.rect.right and player.rect.right > snail.rect.right: # Check if the player collides with the snail from the left side
                         game_active = False
 
         
@@ -186,8 +146,8 @@ while True:
         # Sending data to database 
         if not data_sent:
             time_survived = int(pygame.time.get_ticks() / 1000) - start_time
-            
-            added_date = (score_hit, time_survived, "test")
+            sql_statement = "INSERT INTO USERS (score, time_survived, user) VALUES (%s, %s, %s)"
+            added_date = (score_hit, time_survived, username)
             mycursor.execute(sql_statement, added_date)
             
             dbconn.commit()

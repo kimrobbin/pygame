@@ -3,8 +3,7 @@ import mysql.connector
 dbconn = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="",
-    database="Pygame"
+    password="kimrobbin", 
 )
 
 mycursor = dbconn.cursor()
