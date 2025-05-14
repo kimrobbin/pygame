@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./static/style.css">
+</head>
+<body>
+  <table>
+    <tr>
+   
+            <h1>Leaderboard</h1>
+        
+    </tr>
+    <tr>
+        <td>Player</td>
+        <td>Score</td>
+    </tr>
+      {% for leaderboard in leaderboard %}
+      <tr>
+       <td> {{ leaderboard[2]}} </td>
+       <td> {{ leaderboard[0]}} </td>
+      </tr>
+      {% endfor %}
+      
+      
+    </table>  
+</body>
+</html>
