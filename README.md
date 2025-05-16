@@ -26,3 +26,29 @@ The objective of the game is to jump on moving mobs and gaining a high score. Af
 2. **Run the Game**
     ```bash¨
      python main.py
+
+
+Leaderboard
+Spillet inkluderer et leaderboard som viser de 10 beste spillerne basert på poengsum. Dette kan vises i en nettleser ved å kjøre Flask-applikasjonen.
+
+## **Hvordan starte Flask-applikasjonen**
+1. Sørg for at Flask er installert: <br>
+``pip install flask``
+
+2. Start Flask-applikasjonen: <br>
+``python app.py``
+3. Skriv in ip-en til pc-en i en nettleser 
+
+### **Database**
+Spillet bruker en MySQL-database for å lagre spillerdata. 
+
+**Oppsett av database**
+Databasen opprettes automatisk når spillet startes første gang. Tabellen ``USERS`` lagrer følgende informasjon:
+
+* score: Poengsum oppnådd av spilleren.
+* time_survived: Tiden spilleren overlevde.
+* user: Spillernavn.
+
+## **Feilsøking**
+* Hvis spillet ikke starter, sjekk at alle libaries er installert.
+* Sørg for at MySQL-serveren kjører og at påloggingsinformasjonen i db.py er korrekt.
