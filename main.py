@@ -5,6 +5,15 @@ from player import Player  # Import the Player class
 from snail import Snail  # Import the Snail class
 from db import *
 
+
+# Game variables
+floor_top = 300
+snail_respawn = 800
+screen_res = 800, 400
+score_hit = 0
+
+snail_spawn_speed = 3
+
 # Creates a database if it doesnt exist
 
 mycursor.execute("CREATE DATABASE IF NOT EXISTS Pygame")
@@ -60,14 +69,11 @@ def display_leaderboard():
         screen.blit(score_surface, score_rec)
         y_offset += 40  # Move down for the next entry
 
+def score_to_db():
+    sql_statement = "INSERT INTO USERS (score, time_survived, user) VALUES (%s, %s, %s)"
+    added_date = (score_hit, time_survived, username)
+    mycursor.execute(sql_statement, added_date)
 
-# Game variables
-floor_top = 300
-snail_respawn = 800
-screen_res = 800, 400
-score_hit = 0
-
-snail_spawn_speed = 3
 
 
 
@@ -176,9 +182,7 @@ while True:
         # Sending data to database 
         if not data_sent:
             time_survived = int(pygame.time.get_ticks() / 1000) - start_time
-            sql_statement = "INSERT INTO USERS (score, time_survived, user) VALUES (%s, %s, %s)"
-            added_date = (score_hit, time_survived, username)
-            mycursor.execute(sql_statement, added_date)
+            score_to_db()
             
             
             
