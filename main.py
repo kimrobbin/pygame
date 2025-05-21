@@ -15,19 +15,19 @@ score_hit = 0
 snail_spawn_speed = 3
 
 # Creates a database if it doesnt exist
+def create_database():
+    mycursor.execute("CREATE DATABASE IF NOT EXISTS Pygame")
 
-mycursor.execute("CREATE DATABASE IF NOT EXISTS Pygame")
+    mycursor.execute("USE Pygame")
 
-mycursor.execute("USE Pygame")
+    # Creates Tabels.
+    mycursor.execute(""" CREATE TABLE IF NOT EXISTS USERS( 
+                    score int(200) NOT NULL,
+                    time_survived int(200) NOT NULL,
+                    user varchar(20) NOT NULL )
+                    """)
 
-# Creates Tabels.
-mycursor.execute(""" CREATE TABLE IF NOT EXISTS USERS( 
-                 score int(200) NOT NULL,
-                 time_survived int(200) NOT NULL,
-                 user varchar(20) NOT NULL )
-                 """)
-
-
+create_database()
 
 
 
